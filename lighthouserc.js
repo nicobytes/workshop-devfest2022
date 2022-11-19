@@ -1,10 +1,10 @@
 module.exports = {
   ci: {
     collect: {
-      startServerCommand: "npm run start:prod",
+      startServerCommand: "npx http-server dist/landing-perf-angular/browser",
       url: ["http://localhost:8080"],
       numberOfRuns: 3,
-      chromePath: "/bin/google-chrome",
+      // chromePath: "/bin/google-chrome",
     },
     assert: {
       assertions: {
