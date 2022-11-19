@@ -107,6 +107,8 @@ repositorio.
 
 # GitHub Actions
 
+.github/workflows/ci.yml
+
 ```yml
 name: CI
 on:
