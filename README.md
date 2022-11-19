@@ -4,9 +4,12 @@ Este en proyecto está la landing de un producto, el cual tiene toda la informac
 
 - [Instalación](#instalación)
 - [Configuración](#configuración)
-- [GitHub Actions](#github-actions)
 - [Licencia](#licencia)
 - [Credits](#credits)
+
+## DevOps
+
+![DevOps](https://i.imgur.com/nou6qXe.png)
 
 ## Instalación
 
@@ -151,6 +154,14 @@ tests:
     - name: Run Tests
       run: npm run test -- --no-watch --code-coverage --browsers=ChromeHeadlessCI
 ```
+
+```sh
+npm run test -- --no-watch --code-coverage --browsers=ChromeHeadlessCI
+# "test:ci": "ng test --no-watch --code-coverage --browsers=ChromeHeadlessCI",
+npm run test:ci
+```
+
+
 
 # Automatizar Lighthouse
 
