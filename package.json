@@ -11,7 +11,6 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lhci": "npm run build && lhci autorun --config=lighthouserc.js",
-    "lhci:ssr": "npm run build:ssr && lhci autorun --config=lighthouserc-ssr.js",
     "lint": "ng lint",
     "images": "npm run images:resize && npm run images:compress",
     "images:resize": "node scripts/resize.mjs",

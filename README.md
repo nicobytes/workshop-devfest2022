@@ -95,16 +95,6 @@ La aplicación ya tiene componentes para cada sección de la siguiente manera:
     └── home
 ```
 
-### Scripts
-
-- El comando `npm run build` corre webpack en modo producción y deja los archivos de producción en la carpeta `/dis/app`.
-- El comando `npm run analyze` genera el reporte de Webpack Bundle Analyze para examinar el bundle size de JS.
-- El comando `npm run start` genera un servidor en modo desarrollo el cual tiene livereload.
-- El comando `npm run start:prod` inicia un servidor usando `http-server` con la carpeta de `/dist/...` que es la carpeta en donde quedan los archivos para producción, recuerda antes de correr este comando asegurarte de correr `npm run build`.
-- El comando `npm run lhci` corre [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) para verificar los puntajes esperados de Lighthouse.
-- El comando `npm run lhci:ssr` corre [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) para verificar los puntajes esperados de Lighthouse usando SSR.
-repositorio.
-
 # GitHub Actions
 
 .github/workflows/ci.yml
@@ -185,20 +175,6 @@ jobs:
         run: npm ci
       - name: Run Lighthouse
         run: npm run lhci
-  lhci-ssr:
-    name: Lighthouse with SSR
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git clone
-        uses: actions/checkout@v3
-      - name: Setup NodeJs
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - name: Install
-        run: npm ci
-      - name: Run Lighthouse SSR
-        run: npm run lhci:ssr
 ```
 
 ## Licencia
