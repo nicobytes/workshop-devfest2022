@@ -4,8 +4,6 @@ Este en proyecto está la landing de un producto, el cual tiene toda la informac
 
 - [Instalación](#instalación)
 - [Configuración](#configuración)
-- [Funcionalidades](#funcionalidades)
-- [Como enviar tu solución](#como-enviar-tu-solución)
 - [Licencia](#licencia)
 - [Credits](#credits)
 
@@ -105,91 +103,101 @@ La aplicación ya tiene componentes para cada sección de la siguiente manera:
 - El comando `npm run start:prod` inicia un servidor usando `http-server` con la carpeta de `/dist/...` que es la carpeta en donde quedan los archivos para producción, recuerda antes de correr este comando asegurarte de correr `npm run build`.
 - El comando `npm run lhci` corre [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) para verificar los puntajes esperados de Lighthouse.
 - El comando `npm run lhci:ssr` corre [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) para verificar los puntajes esperados de Lighthouse usando SSR.
+repositorio.
 
-## Funcionalidades
+# GitHub Actions
 
-En este momento tenemos que el sitio tiene un bajo puntaje según el reporte de Lighthouse lo cual hace que los usuarios se vayan del sitio, es decir hay un porcentaje de rebote muy alto, ya que el sitio se demora en cargar y no tiene buenas prácticas en SEO para que aparezca en motores de búsqueda, lo cual está afectando el negocio y el dinero invertido en campañas para atraer usuarios.
-
-### 1. Remover de MomentJS
-
-Corriendo el comando `npm run analyze` nos fijamos que Moment JS es una librería que pesa demasiado
-
-![webpack bundle](https://i.imgur.com/yBKn7c7.png)
-
-Y no solo eso cuando se corre el comando `npm run build` nos arroja alertas en donde nos muestra que la app esta excediendo los pesos de JS recomendados.
-
-![webpack bundle](https://i.imgur.com/a5vCILu.png)
-
-Realmente solo se usa para calcular hace cuanto tiempo se hizo un review desde el componente de `<app-customers></app-customers>`
-
-![app-customers](https://i.imgur.com/e69TXpp.png)
-
-Por ende se debe remover esta librería y encontrar una alternativa que sea mucho más ligera y nos permita la misma funcionalidad.
-
-### 2. Puntajes en Lighthouse
-
-El objetivo es implementar los cambios necesarios para que el puntaje de Lighthouse cumpla con los siguientes puntajes minimos:
-
-- Performance: Mínimo 50% o más.
-- Accessibility: Mínimo 80% o más.
-- Best Practices: Mínimo 90% o más.
-- SEO: Mínimo 80% o más.
-
-Por ende en el repositorio se ha incluido el comando `npm run lhci` que dada la configuración en el archivo `lighthouserc.js` comprueba los puntajes.
-
-Cuando corras el comando `npm run lhci` por primera vez se verá así:
-
-![failed](https://i.imgur.com/QvvhuEK.png)
-
-Además puedes ver un link al final para ver el reporte en modo HTML:
-
-![report](https://i.imgur.com/ZIuV78Z.png)
-
-Se espera se hagan los ajustes necesarios para que el reporte de Lighthouse cumpla con los puntajes esperados.
-
-> Si usas WSL2 o Linux puede que tengas que especificar en el path en donde está instalado Chrome en el archivo `lighthouserc.js` y `lighthouserc-ssr.js` puedes configurar esa ubicación.
-
-```js
-module.exports = {
-  ci: {
-    collect: {
-      startServerCommand: "npm run start",
-      url: ["http://localhost:8080"],
-      numberOfRuns: 3,
-      // chromePath: "/bin/google-chrome", 👈
-    },
-    ...
-  },
-};
-
+```yml
+name: CI
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  linter:
+  tests:
+  lhci:
 ```
 
-### 3. Implementar SSR
+# Automatizar Linter
 
-Con el mismo objetivo de seguir mejorando el rendimiento y el SEO del sitio, se debe incorporar SSR en ese sitio con [Angular Universal](https://angular.io/guide/universal)  y lograr mejores puntajes en el reporte de Lighthouse.
+```yml
+linter:
+  name: Linter
+  runs-on: ubuntu-latest
+  steps:
+    - name: Git clone
+      uses: actions/checkout@v3
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - name: Install
+      run: npm ci
+    - name: Run Linter
+      run: npm run lint
+```
 
-Para este caso se creó un script específico que es `npm run lhci:ssr` el cual corre el reporte de Lighthouse pero usando SSR.
 
-Se espera que al implementar SSR los puntajes esperados aumenten así:
+# Automatizar Unit tests
 
-- Performance: Mínimo 55% o más.
-- Accessibility: Mínimo 80% o más.
-- Best Practices: Mínimo 90% o más.
-- SEO: Mínimo 90% o más.
+```yml
+tests:
+  name: Unit tests
+  runs-on: ubuntu-latest
+  steps:
+    - name: Git clone
+      uses: actions/checkout@v3
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - name: Install
+      run: npm ci
+    - name: Run Tests
+      run: npm run test -- --no-watch --code-coverage --browsers=ChromeHeadlessCI
+```
 
-### 4. Animaciones en secciones
+# Automatizar Lighthouse
 
-- Se espera que el cuándo se haga clics en la sección se haga scroll con una suave animación de scroll.
-- Se espera que cuando se haga scroll la barra de navegación quede fija.
-- Se espera que cuando el usuario llegue a las secciones de features, customers y stats haciendo scroll se ejecute una animación usando fadeInUp y pasando de opacity de 0 a 1.
-
-### 5. Deployment (Bonus)
-
-Desplegar la aplicación en alguno de los siguientes servicios: GitHub Pages, Netlify, Vercel, Firebase Hosting.
-
-## Como enviar tu solución
-
-Debes de hacer un "Fork" de este proyecto, revolver los problemas y crear un Pull Request hacia este repositorio.
+```yml
+name: CI
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v3
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run: npm ci
+      - name: Run Lighthouse
+        run: npm run lhci
+  lhci-ssr:
+    name: Lighthouse with SSR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v3
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run: npm ci
+      - name: Run Lighthouse SSR
+        run: npm run lhci:ssr
+```
 
 ## Licencia
 
@@ -198,3 +206,4 @@ Este proyecto se lanza bajo la licencia [MIT](https://opensource.org/licenses/MI
 ## Credits
 
 - [Freebie: Oasis](https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template/)
+
