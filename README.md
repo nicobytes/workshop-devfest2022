@@ -155,27 +155,20 @@ tests:
 # Automatizar Lighthouse
 
 ```yml
-name: CI
-on:
-  push:
-    branches: [ '*' ]
-  pull_request:
-    branches: [ main, master ]
-jobs:
-  lhci:
-    name: Lighthouse
-    runs-on: ubuntu-latest
-    steps:
-      - name: Git clone
-        uses: actions/checkout@v3
-      - name: Setup NodeJs
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - name: Install
-        run: npm ci
-      - name: Run Lighthouse
-        run: npm run lhci
+lhci:
+  name: Lighthouse
+  runs-on: ubuntu-latest
+  steps:
+    - name: Git clone
+      uses: actions/checkout@v3
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - name: Install
+      run: npm ci
+    - name: Run Lighthouse
+      run: npm run lhci
 ```
 
 ## Licencia

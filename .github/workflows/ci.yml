@@ -19,3 +19,31 @@ jobs:
         run: npm ci
       - name: Run Linter
         run: npm run lint
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v3
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run: npm ci
+      - name: Run Tests
+        run: npm run test -- --no-watch --code-coverage --browsers=ChromeHeadlessCI
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v3
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Install
+        run: npm ci
+      - name: Run Lighthouse
+        run: npm run lhci
