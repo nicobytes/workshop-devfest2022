@@ -4,6 +4,7 @@ Este en proyecto está la landing de un producto, el cual tiene toda la informac
 
 - [Instalación](#instalación)
 - [Configuración](#configuración)
+- [GitHub Actions](#github-actions)
 - [Licencia](#licencia)
 - [Credits](#credits)
 
